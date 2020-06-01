@@ -1,12 +1,11 @@
 cc_library(
-    name = "hardware",
+    name = "system",
     srcs = [
-        "cpu.cpp",
-        "cache.cpp",
-        "memory.cpp",
+        "posix.cpp",
+        "filesystem.cpp",
     ],
     hdrs = [
-        "hardware.h", 
+        "system.h", 
         "util.h"
     ],
     visibility = ["//visibility:public"],
