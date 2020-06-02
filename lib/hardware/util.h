@@ -23,13 +23,6 @@ namespace libzinlidac {
         }
     };
 
-    class SysinfoError : Error {
-    public:
-        std::string description() {
-            return std::string("Cannot get sysinfo");
-        }
-    };
-
     class FileReadError : Error {
     private:
         std::string file_path;
@@ -41,7 +34,7 @@ namespace libzinlidac {
         std::string description() {
             return std::string("Cannot read file ") + this->file_path;
         }
-    }
+    };
 
     #ifdef __linux__
     long int get_result_using_sysconf(int __name, std::string &&target) {

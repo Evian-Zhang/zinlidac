@@ -1,3 +1,5 @@
+#include <string>
+
 namespace libzinlidac {
 // --------------------------- CPU ---------------------------
 // get number of active cpus

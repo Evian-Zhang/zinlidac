@@ -38,15 +38,10 @@ unsigned long get_word_bit() {
 // throws a `SysinfoError` if cannot get system information
 long get_boot_time() {
     #ifdef __linux__
-    struct sysinfo *info = (struct sysinfo*)malloc(sizeof(struct sysinfo));
-    try {
-        sysinfo(info);
-    } catch(...) {
-        free(info);
-        throw hardware::SysinfoError();
-    }
-    long boot_time = info->uptime;
-    free(info);
+    struct sysinfo info;
+    // return -1 if `&info` is not a valid address, which is impossible
+    sysinfo(&info);
+    long boot_time = info.uptime;
     return boot_time;
     #endif
 }

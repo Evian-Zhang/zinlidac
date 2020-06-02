@@ -37,15 +37,10 @@ unsigned long get_available_physical_memory_pages_number() {
 // throws a `SysinfoError` if cannot get system information
 unsigned long get_shared_memory_size() {
     #ifdef __linux__
-    struct sysinfo *info = (struct sysinfo*)malloc(sizeof(struct sysinfo));
-    try {
-        sysinfo(info);
-    } catch(...) {
-        free(info);
-        throw hardware::SysinfoError();
-    }
-    unsigned long shared_memory_size = info->sharedram;
-    free(info);
+    struct sysinfo info;
+    // return -1 if `&info` is not a valid address, which is impossible
+    sysinfo(&info);
+    unsigned long shared_memory_size = info.sharedram;
     return shared_memory_size;
     #endif
 }
@@ -53,15 +48,10 @@ unsigned long get_shared_memory_size() {
 // throws a `SysinfoError` if cannot get system information
 unsigned long get_swap_space_size() {
     #ifdef __linux__
-    struct sysinfo *info = (struct sysinfo*)malloc(sizeof(struct sysinfo));
-    try {
-        sysinfo(info);
-    } catch(...) {
-        free(info);
-        throw hardware::SysinfoError();
-    }
-    unsigned long swap_space_size = info->totalswap;
-    free(info);
+    struct sysinfo info;
+    // return -1 if `&info` is not a valid address, which is impossible
+    sysinfo(&info);
+    unsigned long swap_space_size = info.totalswap;
     return swap_space_size;
     #endif
 }
