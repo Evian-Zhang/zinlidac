@@ -1,7 +1,6 @@
 cc_library(
     name = "system",
     srcs = [
-        "posix.cpp",
         "filesystem.cpp",
     ],
     hdrs = [
