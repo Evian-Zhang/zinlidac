@@ -8,6 +8,7 @@
 #include <unistd.h>
 #include <linux/kernel.h>
 #include <sys/sysinfo.h>
+#include <sys/utsname.h>
 #endif
 
 namespace libzinlidac {
@@ -66,5 +67,12 @@ std::string get_cpu_stat() {
     } else {
         throw hardware::FileReadError("/proc/stat");
     }
+}
+
+std::string get_hardware_type() {
+    struct utsname unix_name;
+    // No errors are defined
+    uname(&unix_name);
+    return std::string(unix_name.machine);
 }
 }

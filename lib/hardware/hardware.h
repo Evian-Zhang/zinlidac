@@ -12,7 +12,6 @@ unsigned long get_cpu_clock_ticks_per_time();
 // throws a `SysconfError` both if the implementation does not impose a limit, and in case of an error
 unsigned long get_word_bit();
 // get boot time in seconds
-// throws a `SysinfoError` if cannot get system information
 long get_boot_time();
 // get content of /proc/cpuinfo
 // throws a `FileReadError` if cannot open /proc/cpuinfo
@@ -20,6 +19,8 @@ std::string get_cpuinfo();
 // get content of /proc/stat
 // throws a `FileReadError` if cannot open /proc/stat
 std::string get_cpu_stat();
+// get name of the hardware type on which the system is running
+std::string get_hardware_type();
 
 // --------------------------- Cache ---------------------------
 // get size of the Level 1 instruction cache
@@ -49,9 +50,7 @@ unsigned long get_physical_memory_page_size();
 // throws a `SysconfError` both if the implementation does not impose a limit, and in case of an error
 unsigned long get_available_physical_memory_pages_number();
 // get size of shared memory
-// throws a `SysinfoError` if cannot get system information
 unsigned long get_shared_memory_size();
 // get size of swap space
-// throws a `SysinfoError` if cannot get system information
 unsigned long get_swap_space_size();
 }

@@ -12,27 +12,23 @@ namespace libzinlidac {
     namespace system {
     class SysconfError : Error {
     private:
-        std::string target;
+        const std::string target;
     public:
-        SysconfError(std::string &&target) {
-            this->target = target;
-        }
+        SysconfError(std::string &&target) : target(target) { }
 
         std::string description() {
             return std::string("Cannot access ") + this->target;
         }
     };
 
-    class POSIXMarcoError : Error {
+    class FileReadError : Error {
     private:
-        std::string macro_name;
+        const std::string file_path;
     public:
-        POSIXMarcoError(std::string &&macro_name) {
-            this->macro_name = macro_name;
-        }
+        FileReadError(std::string &&file_path) : file_path(file_path) { }
 
         std::string description() {
-            return std::string("Cannot get value of POSIX macro ") + this->macro_name;
+            return std::string("Cannot read file ") + this->file_path;
         }
     };
 
