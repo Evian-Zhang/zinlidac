@@ -32,6 +32,15 @@ namespace libzinlidac {
         }
     };
 
+    class SpecialError : Error {
+    private:
+        const std::string description_string;
+    public:
+        SpecialError(std::string &&description_string) : description_string(description_string) { }
+
+        std::string description() { return this->description_string; }
+    };
+
     #ifdef __linux__
     long int get_result_using_sysconf(int __name, std::string &&target) {
         long int result = sysconf(__name);

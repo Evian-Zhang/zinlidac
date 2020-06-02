@@ -4,7 +4,9 @@ cc_library(
         "os.cpp",
         "filesystem.cpp",
         "time.cpp",
-        "locale.cpp"
+        "locale.cpp",
+        "user.cpp",
+        "process.cpp"
     ],
     hdrs = [
         "system.h", 

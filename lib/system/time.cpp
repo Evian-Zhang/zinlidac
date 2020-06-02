@@ -35,6 +35,7 @@ TimeSince1970 get_current_time() {
 
 // throws a `FileReadError` if cannot open /etc/timezone
 std::string get_timezone() {
+    #ifdef __linux__
     auto timezone_file = std::ifstream("/etc/timezone");
     if (timezone_file.is_open()) {
         // see https://stackoverflow.com/a/2912614/10005095
@@ -42,5 +43,6 @@ std::string get_timezone() {
     } else {
         throw system::FileReadError("/etc/timezone");
     }
+    #endif
 }
 }
