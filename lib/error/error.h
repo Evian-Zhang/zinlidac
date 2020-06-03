@@ -5,7 +5,9 @@
 namespace libzinlidac {
     class Error {
     public:
-        std::string description();
+        virtual std::string description() const {
+            return std::string("");
+        }
     };
 }
 

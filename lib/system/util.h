@@ -10,42 +10,42 @@
 
 namespace libzinlidac {
     namespace system {
-    class SysconfError : Error {
+    class SysconfError : public Error {
     private:
         const std::string target;
     public:
         SysconfError(std::string &&target) : target(target) { }
 
-        std::string description() {
+        virtual std::string description() const {
             return std::string("Cannot access ") + this->target;
         }
     };
 
-    class FileReadError : Error {
+    class FileReadError : public Error {
     private:
         const std::string file_path;
     public:
         FileReadError(std::string &&file_path) : file_path(file_path) { }
 
-        std::string description() {
+        virtual std::string description() const {
             return std::string("Cannot read file ") + this->file_path;
         }
     };
 
-    class StatvfsError : Error {
+    class StatvfsError : public Error {
     public:
-        std::string description() {
+        virtual std::string description() const {
             return std::string("Cannot determine using statvfs");
         }
     };
 
-    class SpecialError : Error {
+    class SpecialError : public Error {
     private:
         const std::string description_string;
     public:
         SpecialError(std::string &&description_string) : description_string(description_string) { }
 
-        std::string description() { return this->description_string; }
+        virtual std::string description() const { return this->description_string; }
     };
 
     #ifdef __linux__

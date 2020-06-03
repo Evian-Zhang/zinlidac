@@ -10,24 +10,24 @@
 
 namespace libzinlidac {
     namespace hardware {
-    class SysconfError : Error {
+    class SysconfError : public Error {
     private:
         const std::string target;
     public:
         SysconfError(std::string &&target) : target(target) { }
 
-        std::string description() {
+        virtual std::string description() const {
             return std::string("Cannot access ") + this->target;
         }
     };
 
-    class FileReadError : Error {
+    class FileReadError : public Error {
     private:
         const std::string file_path;
     public:
         FileReadError(std::string &&file_path) : file_path(file_path) { }
 
-        std::string description() {
+        virtual std::string description() const {
             return std::string("Cannot read file ") + this->file_path;
         }
     };

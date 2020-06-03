@@ -98,6 +98,15 @@ struct ProcessInfo {
     std::string basename; // basename of executable file in call to exec(2)
     int threads_number; // number of threads, or 0 if no clue
 };
+struct LsofResult {
+    std::string command;
+    unsigned int pid;
+    std::string user;
+    std::string fd;
+    std::string type;
+    std::string device;
+    std::string name;
+};
 // get list of environment variables
 std::vector<std::string> get_environment_variables() noexcept;
 // get info of current running processes
@@ -106,4 +115,17 @@ std::vector<ProcessInfo> get_processes();
 // get PATH environment variable
 // throws a `SepecialError` if cannot find PATH
 std::string get_path_environment();
+
+// --------------------------- Network ---------------------------
+struct NetworkInterfaceInfo {
+    std::string name;
+    std::string network_family;
+    std::string address;
+};
+// get list of network interfaces
+// throws a `SpecialError` if getifaddrs failed
+std::vector<NetworkInterfaceInfo> get_network_interfaces();
+// get the result of executing `lsof -Ua`
+// throws a SpecialError if failed to execute lsof -Ua or no enough memory
+std::vector<LsofResult> get_lsof__Ua();
 }

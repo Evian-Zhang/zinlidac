@@ -33,25 +33,25 @@ unsigned long get_filesystem_free_size() {
 }
 
 static const struct {
-    unsigned long magic;
+    long magic;
     const char *type;
 } FilesystemTypes[] = {
     {EXT4_SUPER_MAGIC, "ext4"},
     {TMPFS_MAGIC, "tmpfs"}
 };
 
-// throws a `SpecialError` if type is unknown or statfs fails
+// throws a `SpecialError` if statfs failed
 std::string get_filesystem_type() {
     #ifdef __linux__
     // see https://stackoverflow.com/a/54298866/10005095
     struct statfs fs;
     if (statfs("/", &fs) == 0) {
-        for (int i = 0; i < sizeof(FilesystemTypes) / sizeof(FilesystemTypes[0]); i++) {
+        for (unsigned int i = 0; i < sizeof(FilesystemTypes) / sizeof(FilesystemTypes[0]); i++) {
             if (FilesystemTypes[i].magic == fs.f_type) {
                 return FilesystemTypes[i].type;
             }
-            throw system::SpecialError("Canont determine filesystem type");
         }
+        return std::string("Unknown");
     } else {
         throw system::SpecialError("Cannot determine using statfs");
     }
