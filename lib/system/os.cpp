@@ -4,7 +4,7 @@
 #endif
 
 namespace zinlidac {
-std::string get_system_name() {
+std::string get_system_name() noexcept {
     #ifdef __linux__
     struct utsname unix_name;
     // No errors are defined
@@ -13,7 +13,7 @@ std::string get_system_name() {
     #endif
 }
 
-std::string get_system_release_level() {
+std::string get_system_release_level() noexcept {
     #ifdef __linux__
     struct utsname unix_name;
     // No errors are defined
@@ -22,7 +22,7 @@ std::string get_system_release_level() {
     #endif
 }
 
-std::string get_system_release_version_level() {
+std::string get_system_release_version_level() noexcept {
     #ifdef __linux__
     struct utsname unix_name;
     // No errors are defined

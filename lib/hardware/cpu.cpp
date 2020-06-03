@@ -36,8 +36,7 @@ unsigned long get_word_bit() {
     #endif
 }
 
-// throws a `SysinfoError` if cannot get system information
-long get_boot_time() {
+long get_boot_time() noexcept {
     #ifdef __linux__
     struct sysinfo info;
     // return -1 if `&info` is not a valid address, which is impossible
@@ -69,7 +68,7 @@ std::string get_cpu_stat() {
     }
 }
 
-std::string get_hardware_type() {
+std::string get_hardware_type() noexcept {
     struct utsname unix_name;
     // No errors are defined
     uname(&unix_name);

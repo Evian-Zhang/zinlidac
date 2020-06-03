@@ -8,7 +8,7 @@
 #endif
 
 namespace libzinlidac {
-TimeSince1970 get_current_time() {
+TimeSince1970 get_current_time() noexcept {
     #ifdef __linux__
     struct timeval tp;
     // NO errors are defined

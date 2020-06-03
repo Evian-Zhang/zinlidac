@@ -9,20 +9,25 @@
 #include <proc/readproc.h>
 #endif
 
+// see `man environ`
+extern char **environ;
+
 namespace libzinlidac {
-std::vector<std::string> get_environment_variables() {
-    // see `man environ`
-    extern char **environ;
+std::vector<std::string> get_environment_variables() noexcept {
+    #ifdef __linux__
     std::vector<std::string> environment_variables;
     int index = 0;
     char *env;
-    while (environ != NULL && (env = environ[index++]) != NULL) {
+    while (::environ != NULL && (env = ::environ[index++]) != NULL) {
         environment_variables.push_back(std::string(env));
     }
     return environment_variables;
+    #endif
 }
+
 // throws a `SpecialError` if cannot read /proc
 std::vector<ProcessInfo> get_processes() {
+    #ifdef __linux__
     std::vector<ProcessInfo> process_infos;
     PROCTAB *proc_tab = openproc(PROC_FILLMEM | PROC_FILLCOM | PROC_FILLENV | PROC_FILLUSR | PROC_FILLARG | PROC_FILLSTAT | PROC_FILLSTATUS);
     if (proc_tab == NULL) {
@@ -56,13 +61,14 @@ std::vector<ProcessInfo> get_processes() {
             .vm_size = process_info.vm_size,
             .vm_resident = process_info.vm_rss,
             .vm_share = process_info.vm_rss_shared,
-            .environment_variables = environment_variables,
-            .cmdline_arguments = cmdline_arguments,
+            .environment_variables = std::move(environment_variables),
+            .cmdline_arguments = std::move(cmdline_arguments),
             .user = std::string(process_info.ruser),
             .basename = std::string(process_info.cmd),
             .threads_number = process_info.nlwp
         });
     }
     return process_infos;
+    #endif
 }
 }

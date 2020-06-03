@@ -34,8 +34,7 @@ unsigned long get_available_physical_memory_pages_number() {
     #endif
 }
 
-// throws a `SysinfoError` if cannot get system information
-unsigned long get_shared_memory_size() {
+unsigned long get_shared_memory_size() noexcept {
     #ifdef __linux__
     struct sysinfo info;
     // return -1 if `&info` is not a valid address, which is impossible
@@ -45,8 +44,7 @@ unsigned long get_shared_memory_size() {
     #endif
 }
 
-// throws a `SysinfoError` if cannot get system information
-unsigned long get_swap_space_size() {
+unsigned long get_swap_space_size() noexcept {
     #ifdef __linux__
     struct sysinfo info;
     // return -1 if `&info` is not a valid address, which is impossible

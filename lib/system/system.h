@@ -4,11 +4,11 @@
 namespace libzinlidac {
 // --------------------------- Operating system ---------------------------
 // get name of this implementation of the operating system
-std::string get_system_name();
+std::string get_system_name() noexcept;
 // get current release level of this implementation
-std::string get_system_release_level();
+std::string get_system_release_level() noexcept;
 // get current version level of this release
-std::string get_system_release_version_level();
+std::string get_system_release_version_level() noexcept;
 
 // --------------------------- Filesystem ---------------------------
 
@@ -19,7 +19,7 @@ struct TimeSince1970 {
 };
 
 // get current time in seconds and milliseconds
-TimeSince1970 get_current_time();
+TimeSince1970 get_current_time() noexcept;
 // get current timezone
 // throws a `FileReadError` if cannot open /etc/timezone
 std::string get_timezone();
@@ -69,7 +69,7 @@ struct ProcessInfo {
     int threads_number; // number of threads, or 0 if no clue
 };
 // get list of environment variables
-std::vector<std::string> get_environment_variables();
+std::vector<std::string> get_environment_variables() noexcept;
 // get info of current running processes
 // throws a `SpecialError` if cannot read /proc
 std::vector<ProcessInfo> get_processes();

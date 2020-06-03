@@ -16,4 +16,8 @@ cc_library(
     deps = [
         "//lib/error:error",
     ],
+    linkopts = [
+        # see https://stackoverflow.com/a/58846856/10005095
+        "-lprocps",
+    ],
 )
