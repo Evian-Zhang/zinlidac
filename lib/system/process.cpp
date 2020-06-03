@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <cstring>
+#include <cstdlib>
 #ifdef __linux__
 // need `apt install libprocps-dev`
 #include <proc/readproc.h>
@@ -22,6 +23,20 @@ std::vector<std::string> get_environment_variables() noexcept {
         environment_variables.push_back(std::string(env));
     }
     return environment_variables;
+    #endif
+}
+
+// throws a `SepecialError` if cannot find PATH
+std::string get_path_environment() {
+    #ifdef __linux__
+    char *path = getenv("PATH");
+    if (path != NULL) {
+        // The getenv() function returns a pointer to the value  in  the  environment
+        return std::string(path);
+    } else {
+        // The getenv() function returns NULL if there is no match.
+        throw system::SpecialError("Cannot find environment variable PATH");
+    }
     #endif
 }
 

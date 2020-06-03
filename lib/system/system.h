@@ -11,7 +11,28 @@ std::string get_system_release_level() noexcept;
 std::string get_system_release_version_level() noexcept;
 
 // --------------------------- Filesystem ---------------------------
+struct FilesystemInfo {
+    std::string name;
+    std::string dir; // filesystem path prefix
+    std::string mount_type;
+    std::string mount_options;
+};
 
+// get capacity of /
+// throws a `StatvfsError` if statvfs fails
+unsigned long get_filesystem_capacity();
+// get free space size of /
+// throws a `StatvfsError` if statvfs fails
+unsigned long get_filesystem_free_size();
+// get name of filesystem type
+// throws a `SpecialError` if type is unknown or statfs fails
+std::string get_filesystem_type();
+// get information of current mounted filesystems
+// throws a `FileReadError` if cannot open /etc/mtab
+std::vector<FilesystemInfo> get_current_mounted_filesystems();
+// get information of filesystems that is configured to be mounted by the installation or sysadmin
+// throws a `FileReadError` if cannot open /etc/fstab
+std::vector<FilesystemInfo> get_configured_mounted_filesystems();
 // --------------------------- Time ---------------------------
 struct TimeSince1970 {
     long int seconds;
@@ -43,6 +64,11 @@ struct UserInfo {
     std::string home_directory;
     std::string login_shell;
 };
+struct GroupInfo {
+    std::string name;
+    unsigned int gid;
+    std::vector<std::string> users;
+};
 // get user logged in on the controlling terminal of the process
 // throws a `SpecialError` if name of the user logged in cannot be determined
 LoginUserInfo get_associated_user();
@@ -50,6 +76,10 @@ LoginUserInfo get_associated_user();
 // throws a `FileReadError` if cannot open /etc/passwd
 // throws a `SpecialError` if cannot parse uid or groupid to integer
 std::vector<UserInfo> get_users();
+// get groups list
+// throws a `FileReadError` if cannot open /etc/group
+// throws a `SpecialError` if cannot parse gid to integer
+std::vector<GroupInfo> get_groups();
 
 // --------------------------- Process ---------------------------
 struct ProcessInfo {
@@ -73,4 +103,7 @@ std::vector<std::string> get_environment_variables() noexcept;
 // get info of current running processes
 // throws a `SpecialError` if cannot read /proc
 std::vector<ProcessInfo> get_processes();
+// get PATH environment variable
+// throws a `SepecialError` if cannot find PATH
+std::string get_path_environment();
 }

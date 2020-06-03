@@ -1,13 +1,14 @@
 #include "system.h"
 #include "util.h"
-#ifdef __linux__
-#include "unistd.h"
-#endif
 
 #include <string>
 #include <vector>
 #include <regex>
 #include <fstream>
+#include <sstream>
+#ifdef __linux__
+#include <unistd.h>
+#endif
 
 namespace libzinlidac {
 // throws a `SpecialError` if name of the user logged in cannot be determined
@@ -64,6 +65,64 @@ std::vector<UserInfo> get_users() {
         }
     }
     return user_infos;
+    #endif
+}
+
+// see https://stackoverflow.com/a/5607650/10005095
+struct UserListTokens : std::ctype<char> {
+    UserListTokens() : std::ctype<char>(get_table()) {}
+
+    static std::ctype_base::mask const *get_table() {
+        typedef std::ctype<char> cctype;
+        static const cctype::mask *const_rc= cctype::classic_table();
+
+        static cctype::mask rc[cctype::table_size];
+        std::memcpy(rc, const_rc, cctype::table_size * sizeof(cctype::mask));
+
+        rc[','] = std::ctype_base::space; 
+        return &rc[0];
+    }
+};
+
+// throws a `FileReadError` if cannot open /etc/group
+// throws a `SpecialError` if cannot parse gid to integer
+std::vector<GroupInfo> get_groups() {
+    #ifdef __linux__
+    std::vector<GroupInfo> group_infos;
+    auto group_file = std::ifstream("/etc/group");
+    if (!group_file.is_open()) {
+        throw system::FileReadError("/etc/group");
+    }
+    std::string group_line;
+    auto regex = std::regex("(.*?):.*?:(.*?):(.*)");
+    std::smatch sm;
+    while (std::getline(group_file, group_line)) {
+        if (std::regex_match(group_line, sm, regex)) {
+            if (sm.length() == 4) {
+                unsigned int gid;
+                try {
+                    gid = std::stoi(sm[2]);
+                } catch (...) {
+                    throw system::SpecialError(std::string("Cannot parse gid to integer"));
+                }
+                std::string user_list = sm[3];
+                // see https://stackoverflow.com/a/5607650/10005095
+                std::stringstream ss(user_list);
+                // in case UserListTokens is not deleted
+                auto loc = std::make_shared<UserListTokens>();
+                ss.imbue(std::locale(std::locale(), loc.get()));
+                std::istream_iterator<std::string> begin(ss);
+                std::istream_iterator<std::string> end;
+                std::vector<std::string> users(begin, end);
+                group_infos.push_back((GroupInfo){
+                    .name = sm[1],
+                    .gid = gid,
+                    .users = std::move(users)
+                });
+            }
+        }
+    }
+    return group_infos;
     #endif
 }
 }

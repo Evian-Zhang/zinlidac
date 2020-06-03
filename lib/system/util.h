@@ -32,6 +32,13 @@ namespace libzinlidac {
         }
     };
 
+    class StatvfsError : Error {
+    public:
+        std::string description() {
+            return std::string("Cannot determine using statvfs");
+        }
+    };
+
     class SpecialError : Error {
     private:
         const std::string description_string;

@@ -2,7 +2,8 @@
 #include "util.h"
 
 #include <string>
-#include <stdlib.h>
+#include <cstdlib>
+#include <fstream>
 #ifdef __linux__
 #include <unistd.h>
 #include <linux/kernel.h>
@@ -52,5 +53,16 @@ unsigned long get_swap_space_size() noexcept {
     unsigned long swap_space_size = info.totalswap;
     return swap_space_size;
     #endif
+}
+
+// throws a `FileReadError` if cannot open /proc/meminfo
+std::string get_meminfo() {
+    auto meminfo_file = std::ifstream("/proc/meminfo");
+    if (meminfo_file.is_open()) {
+        // see https://stackoverflow.com/a/2912614/10005095
+        return std::string((std::istreambuf_iterator<char>(meminfo_file)), (std::istreambuf_iterator<char>()));
+    } else {
+        throw hardware::FileReadError("/proc/meminfo");
+    }
 }
 }

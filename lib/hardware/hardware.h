@@ -53,4 +53,7 @@ unsigned long get_available_physical_memory_pages_number();
 unsigned long get_shared_memory_size() noexcept;
 // get size of swap space
 unsigned long get_swap_space_size() noexcept;
+// get content of /proc/meminfo
+// throws a `FileReadError` if cannot open /proc/meminfo
+std::string get_meminfo();
 }
