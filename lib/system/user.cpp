@@ -6,14 +6,11 @@
 #include <regex>
 #include <fstream>
 #include <sstream>
-#ifdef __linux__
 #include <unistd.h>
-#endif
 
 namespace libzinlidac {
 // throws a `SpecialError` if name of the user logged in cannot be determined
 LoginUserInfo get_associated_user() {
-    #ifdef __linux__
     // From `man getlogin`:
     //
     // getlogin()  returns  a  pointer  to a string containing the name of the
@@ -28,13 +25,11 @@ LoginUserInfo get_associated_user() {
     } else {
         throw system::SpecialError("Cannot determine logged in user");
     }
-    #endif
 }
 
 // throws a `FileReadError` if cannot open /etc/passwd
 // throws a `SpecialError` if cannot parse uid or groupid to integer
 std::vector<UserInfo> get_users() {
-    #ifdef __linux__
     std::vector<UserInfo> user_infos;
     auto passwd_file = std::ifstream("/etc/passwd");
     if (!passwd_file.is_open()) {
@@ -45,7 +40,7 @@ std::vector<UserInfo> get_users() {
     std::smatch sm;
     while (std::getline(passwd_file, passwd_line)) {
         if (std::regex_match(passwd_line, sm, regex)) {
-            if (sm.length() == 7) {
+            if (sm.size() == 7) {
                 unsigned int uid, groupid;
                 try {
                     uid = std::stoi(sm[2]);
@@ -65,7 +60,6 @@ std::vector<UserInfo> get_users() {
         }
     }
     return user_infos;
-    #endif
 }
 
 // see https://stackoverflow.com/a/5607650/10005095
@@ -87,7 +81,6 @@ struct UserListTokens : std::ctype<char> {
 // throws a `FileReadError` if cannot open /etc/group
 // throws a `SpecialError` if cannot parse gid to integer
 std::vector<GroupInfo> get_groups() {
-    #ifdef __linux__
     std::vector<GroupInfo> group_infos;
     auto group_file = std::ifstream("/etc/group");
     if (!group_file.is_open()) {
@@ -98,7 +91,7 @@ std::vector<GroupInfo> get_groups() {
     std::smatch sm;
     while (std::getline(group_file, group_line)) {
         if (std::regex_match(group_line, sm, regex)) {
-            if (sm.length() == 4) {
+            if (sm.size() == 4) {
                 unsigned int gid;
                 try {
                     gid = std::stoi(sm[2]);
@@ -123,6 +116,5 @@ std::vector<GroupInfo> get_groups() {
         }
     }
     return group_infos;
-    #endif
 }
 }

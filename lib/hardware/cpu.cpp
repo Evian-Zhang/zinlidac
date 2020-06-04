@@ -4,46 +4,36 @@
 #include <string>
 #include <fstream>
 #include <stdlib.h>
-#ifdef __linux__
 #include <unistd.h>
 #include <linux/kernel.h>
 #include <sys/sysinfo.h>
 #include <sys/utsname.h>
-#endif
 
 namespace libzinlidac {
 // throws a `SysconfError` both if the implementation does not impose a limit, and in case of an error
 unsigned long get_cpus_number() {
-    #ifdef __linux__
     // https://www.gnu.org/software/libc/manual/html_node/Sysconf.html
     return hardware::get_result_using_sysconf(_SC_NPROCESSORS_ONLN, "_SC_NPROCESSORS_ONLN");
-    #endif
 }
 
 // throws a `SysconfError` both if the implementation does not impose a limit, and in case of an error
 unsigned long get_cpu_clock_ticks_per_time() {
-    #ifdef __linux__
     // https://www.gnu.org/software/libc/manual/html_node/Sysconf.html
     return hardware::get_result_using_sysconf(_SC_NPROCESSORS_ONLN, "_SC_NPROCESSORS_ONLN");
-    #endif
 }
 
 // throws a `SysconfError` both if the implementation does not impose a limit, and in case of an error
 unsigned long get_word_bit() {
-    #ifdef __linux__
     // https://www.gnu.org/software/libc/manual/html_node/Sysconf.html
     return hardware::get_result_using_sysconf(_SC_NPROCESSORS_ONLN, "_SC_NPROCESSORS_ONLN");
-    #endif
 }
 
 long get_boot_time() noexcept {
-    #ifdef __linux__
     struct sysinfo info;
     // return -1 if `&info` is not a valid address, which is impossible
     sysinfo(&info);
     long boot_time = info.uptime;
     return boot_time;
-    #endif
 }
 
 // throws a `FileReadError` if cannot open /proc/cpuinfo

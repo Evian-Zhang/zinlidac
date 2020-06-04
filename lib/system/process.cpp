@@ -5,17 +5,14 @@
 #include <string>
 #include <cstring>
 #include <cstdlib>
-#ifdef __linux__
 // need `apt install libprocps-dev`
 #include <proc/readproc.h>
-#endif
 
 // see `man environ`
 extern char **environ;
 
 namespace libzinlidac {
 std::vector<std::string> get_environment_variables() noexcept {
-    #ifdef __linux__
     std::vector<std::string> environment_variables;
     int index = 0;
     char *env;
@@ -23,12 +20,10 @@ std::vector<std::string> get_environment_variables() noexcept {
         environment_variables.push_back(std::string(env));
     }
     return environment_variables;
-    #endif
 }
 
 // throws a `SepecialError` if cannot find PATH
 std::string get_path_environment() {
-    #ifdef __linux__
     char *path = getenv("PATH");
     if (path != NULL) {
         // The getenv() function returns a pointer to the value  in  the  environment
@@ -37,12 +32,10 @@ std::string get_path_environment() {
         // The getenv() function returns NULL if there is no match.
         throw system::SpecialError("Cannot find environment variable PATH");
     }
-    #endif
 }
 
 // throws a `SpecialError` if cannot read /proc
 std::vector<ProcessInfo> get_processes() {
-    #ifdef __linux__
     std::vector<ProcessInfo> process_infos;
     PROCTAB *proc_tab = openproc(PROC_FILLMEM | PROC_FILLCOM | PROC_FILLENV | PROC_FILLUSR | PROC_FILLARG | PROC_FILLSTAT | PROC_FILLSTATUS);
     if (proc_tab == NULL) {
@@ -84,6 +77,5 @@ std::vector<ProcessInfo> get_processes() {
         });
     }
     return process_infos;
-    #endif
 }
 }

@@ -5,13 +5,11 @@
 #include <cstdlib>
 #include <vector>
 #include <regex>
-#ifdef __linux__
 #define _GNU_SOURCE     /* To get defns of NI_MAXSERV and NI_MAXHOST */
 #include <sys/socket.h>
 #include <ifaddrs.h>
 #include <netdb.h>
 #include <netpacket/packet.h>
-#endif
 
 namespace libzinlidac {
 static const struct {
@@ -26,7 +24,6 @@ static const struct {
 
 // throws a `SpecialError` if getifaddrs failed
 std::vector<NetworkInterfaceInfo> get_network_interfaces() {
-    #ifdef __linux__
     std::vector<NetworkInterfaceInfo> interface_infos;
     struct ifaddrs *interface_address;
     if (getifaddrs(&interface_address) == -1) {
@@ -79,10 +76,8 @@ std::vector<NetworkInterfaceInfo> get_network_interfaces() {
     }
     freeifaddrs(interface_address);
     return interface_infos;
-    #endif
 }
 
-#ifdef __linux
 // throws a SpecialError if failed to execute lsof -Ua
 std::vector<LsofIResult> get_lsof__i() {
     std::vector<LsofIResult> lsof_results;
@@ -122,9 +117,7 @@ std::vector<LsofIResult> get_lsof__i() {
     }
     return lsof_results;
 }
-#endif
 
-#ifdef __linux
 // throws a SpecialError if failed to execute lsof -Ua
 std::vector<LsofUaResult> get_lsof__Ua() {
     std::vector<LsofUaResult> lsof_results;
@@ -163,5 +156,4 @@ std::vector<LsofUaResult> get_lsof__Ua() {
     }
     return lsof_results;
 }
-#endif
 }

@@ -2,14 +2,12 @@
 #include "util.h"
 
 #include <cstdio>
-#ifdef __linux__
 #include <unistd.h>
 #include <limits.h>
 #include <sys/statvfs.h>
 #include <sys/vfs.h>
 #include <linux/magic.h>
 #include <mntent.h>
-#endif
 
 namespace libzinlidac {
 // throws a `StatvfsError` if statvfs fails
@@ -42,7 +40,6 @@ static const struct {
 
 // throws a `SpecialError` if statfs failed
 std::string get_filesystem_type() {
-    #ifdef __linux__
     // see https://stackoverflow.com/a/54298866/10005095
     struct statfs fs;
     if (statfs("/", &fs) == 0) {
@@ -55,12 +52,10 @@ std::string get_filesystem_type() {
     } else {
         throw system::SpecialError("Cannot determine using statfs");
     }
-    #endif
 }
 
 // throws a `FileReadError` if cannot open /etc/mtab
 std::vector<FilesystemInfo> get_current_mounted_filesystems() {
-    #ifdef __linux__
     std::vector<FilesystemInfo> filesystem_infos;
     FILE *mtab_file = setmntent("/etc/mtab", "r");
     if (mtab_file == NULL) {
@@ -77,12 +72,10 @@ std::vector<FilesystemInfo> get_current_mounted_filesystems() {
     }
     endmntent(mtab_file);
     return filesystem_infos;
-    #endif
 }
 
 // throws a `FileReadError` if cannot open /etc/fstab
 std::vector<FilesystemInfo> get_configured_mounted_filesystems() {
-    #ifdef __linux__
     std::vector<FilesystemInfo> filesystem_infos;
     FILE *fstab_file = setmntent("/etc/fstab", "r");
     if (fstab_file == NULL) {
@@ -99,6 +92,5 @@ std::vector<FilesystemInfo> get_configured_mounted_filesystems() {
     }
     endmntent(fstab_file);
     return filesystem_infos;
-    #endif
 }
 }

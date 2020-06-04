@@ -3,13 +3,10 @@
 
 #include <string>
 #include <fstream>
-#ifdef __linux__
 #include <sys/time.h>
-#endif
 
 namespace libzinlidac {
 TimeSince1970 get_current_time() noexcept {
-    #ifdef __linux__
     struct timeval tp;
     // NO errors are defined
     //
@@ -30,12 +27,10 @@ TimeSince1970 get_current_time() noexcept {
         .seconds = tp.tv_sec,
         .milliseconds = tp.tv_usec
     };
-    #endif
 }
 
 // throws a `FileReadError` if cannot open /etc/timezone
 std::string get_timezone() {
-    #ifdef __linux__
     auto timezone_file = std::ifstream("/etc/timezone");
     if (timezone_file.is_open()) {
         // see https://stackoverflow.com/a/2912614/10005095
@@ -43,6 +38,5 @@ std::string get_timezone() {
     } else {
         throw system::FileReadError("/etc/timezone");
     }
-    #endif
 }
 }

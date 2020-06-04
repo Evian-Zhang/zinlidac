@@ -4,9 +4,7 @@
 #include "lib/error/error.h"
 
 #include <string>
-#ifdef __linux__
 #include <unistd.h>
-#endif
 
 namespace libzinlidac {
     namespace system {
@@ -48,7 +46,6 @@ namespace libzinlidac {
         virtual std::string description() const { return this->description_string; }
     };
 
-    #ifdef __linux__
     long int get_result_using_sysconf(int __name, std::string &&target) {
         long int result = sysconf(__name);
         if (result >= 0) {
@@ -57,7 +54,6 @@ namespace libzinlidac {
             throw SysconfError(std::move(target));
         }
     }
-    #endif
     }
 }
 
