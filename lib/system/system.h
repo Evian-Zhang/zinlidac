@@ -98,15 +98,6 @@ struct ProcessInfo {
     std::string basename; // basename of executable file in call to exec(2)
     int threads_number; // number of threads, or 0 if no clue
 };
-struct LsofResult {
-    std::string command;
-    unsigned int pid;
-    std::string user;
-    std::string fd;
-    std::string type;
-    std::string device;
-    std::string name;
-};
 // get list of environment variables
 std::vector<std::string> get_environment_variables() noexcept;
 // get info of current running processes
@@ -122,10 +113,32 @@ struct NetworkInterfaceInfo {
     std::string network_family;
     std::string address;
 };
+struct LsofIResult {
+    std::string command;
+    unsigned int pid;
+    std::string user;
+    std::string fd;
+    std::string type;
+    std::string device;
+    std::string node;
+    std::string name;
+};
+struct LsofUaResult {
+    std::string command;
+    unsigned int pid;
+    std::string user;
+    std::string fd;
+    std::string type;
+    std::string device;
+    std::string name;
+};
 // get list of network interfaces
 // throws a `SpecialError` if getifaddrs failed
 std::vector<NetworkInterfaceInfo> get_network_interfaces();
-// get the result of executing `lsof -Ua`
-// throws a SpecialError if failed to execute lsof -Ua or no enough memory
-std::vector<LsofResult> get_lsof__Ua();
+// get the result of executing `lsof -i`, i.e. internet connection
+// throws a SpecialError if failed to execute lsof -i
+std::vector<LsofIResult> get_lsof__i();
+// get the result of executing `lsof -Ua`, i.e. Unix domain socket
+// throws a SpecialError if failed to execute lsof -Ua
+std::vector<LsofUaResult> get_lsof__Ua();
 }

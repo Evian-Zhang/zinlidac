@@ -84,14 +84,14 @@ std::vector<NetworkInterfaceInfo> get_network_interfaces() {
 
 #ifdef __linux
 // throws a SpecialError if failed to execute lsof -Ua
-std::vector<LsofResult> get_lsof__Ua() {
-    std::vector<LsofResult> lsof_results;
+std::vector<LsofIResult> get_lsof__i() {
+    std::vector<LsofIResult> lsof_results;
     FILE *command = popen("lsof -Ua", "r");
     if (command == NULL) {
-        throw system::SpecialError("Failed to execute `lsof -Ua`");
+        throw system::SpecialError("Failed to execute `lsof -i`");
     }
     std::string line_string;
-    auto regex = std::regex("(.*?)\t(.*?)\t(.*?)\t(.*?)\t(.*?)\t(.*?)\t.*?\t.*?\t(.*)");
+    auto regex = std::regex("(.*?)\\s+(\\d*?)\\s+(.*?)\\s+(.*?)\\s+(.*?)\\s+(.*?)\\s+.*?\\s+(.*?)\\s+(.*)");
     std::smatch sm;
     char *line = NULL;
     size_t len = 0;
@@ -99,21 +99,64 @@ std::vector<LsofResult> get_lsof__Ua() {
     while ((read = getline(&line, &len, command)) != -1) {
         line_string = line;
         if (std::regex_match(line_string, sm, regex)) {
-            if (sm.length() == 8) {
+            if (sm.size() == 9) {
                 unsigned int pid;
                 try {
                     pid = std::stoi(sm[2]);
                 } catch (...) {
                     continue;
                 }
-                lsof_results.push_back((LsofResult){
+                printf("pushed\n");
+                lsof_results.push_back((LsofIResult){
                     .command = sm[1],
                     .pid = pid,
-                    .user = sm[2],
-                    .fd = sm[3],
-                    .type = sm[4],
-                    .device = sm[5],
-                    .name = sm[6]
+                    .user = sm[3],
+                    .fd = sm[4],
+                    .type = sm[5],
+                    .device = sm[6],
+                    .node = sm[7],
+                    .name = sm[8]
+                });
+            }
+        }
+    }
+    return lsof_results;
+}
+#endif
+
+#ifdef __linux
+// throws a SpecialError if failed to execute lsof -Ua
+std::vector<LsofUaResult> get_lsof__Ua() {
+    std::vector<LsofUaResult> lsof_results;
+    FILE *command = popen("lsof -Ua", "r");
+    if (command == NULL) {
+        throw system::SpecialError("Failed to execute `lsof -Ua`");
+    }
+    std::string line_string;
+    auto regex = std::regex("(.*?)\\s+(\\d*?)\\s+(.*?)\\s+(.*?)\\s+(.*?)\\s+(.*?)\\s+.*?\\s+.*?\\s+(.*)");
+    std::smatch sm;
+    char *line = NULL;
+    size_t len = 0;
+    ssize_t read;
+    while ((read = getline(&line, &len, command)) != -1) {
+        line_string = line;
+        if (std::regex_match(line_string, sm, regex)) {
+            if (sm.size() == 8) {
+                unsigned int pid;
+                try {
+                    pid = std::stoi(sm[2]);
+                } catch (...) {
+                    continue;
+                }
+                printf("pushed\n");
+                lsof_results.push_back((LsofUaResult){
+                    .command = sm[1],
+                    .pid = pid,
+                    .user = sm[3],
+                    .fd = sm[4],
+                    .type = sm[5],
+                    .device = sm[6],
+                    .name = sm[7]
                 });
             }
         }
