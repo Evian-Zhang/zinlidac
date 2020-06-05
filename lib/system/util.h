@@ -46,14 +46,7 @@ namespace libzinlidac {
         virtual std::string description() const { return this->description_string; }
     };
 
-    long int get_result_using_sysconf(int __name, std::string &&target) {
-        long int result = sysconf(__name);
-        if (result >= 0) {
-            return result;
-        } else {
-            throw SysconfError(std::move(target));
-        }
-    }
+    long int get_result_using_sysconf(int __name, std::string &&target);
     }
 }
 

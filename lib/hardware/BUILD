@@ -4,6 +4,7 @@ cc_library(
         "cpu.cpp",
         "cache.cpp",
         "memory.cpp",
+        "util.cpp"
     ],
     hdrs = [
         "hardware.h", 

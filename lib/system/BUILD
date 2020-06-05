@@ -7,7 +7,8 @@ cc_library(
         "locale.cpp",
         "user.cpp",
         "process.cpp",
-        "network.cpp"
+        "network.cpp",
+        "util.cpp"
     ],
     hdrs = [
         "system.h", 

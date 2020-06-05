@@ -3,9 +3,6 @@
 
 #include "lib/error/error.h"
 
-#include <string>
-#include <unistd.h>
-
 namespace libzinlidac {
     namespace hardware {
     class SysconfError : public Error {
@@ -30,14 +27,7 @@ namespace libzinlidac {
         }
     };
 
-    long int get_result_using_sysconf(int __name, std::string &&target) {
-        long int result = sysconf(__name);
-        if (result >= 0) {
-            return result;
-        } else {
-            throw SysconfError(std::move(target));
-        }
-    }
+    long int get_result_using_sysconf(int __name, std::string &&target);
     }
 }
 
