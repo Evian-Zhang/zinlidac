@@ -1,3 +1,5 @@
 .venv
 libzinlidacpy.so
 __pycache__
+input.graphql
+results.json
