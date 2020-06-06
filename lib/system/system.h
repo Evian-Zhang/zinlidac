@@ -12,10 +12,15 @@ std::string get_system_release_version_level() noexcept;
 
 // --------------------------- Filesystem ---------------------------
 struct FilesystemInfo {
+public:
     std::string name;
     std::string dir; // filesystem path prefix
     std::string mount_type;
     std::string mount_options;
+
+    bool operator==(const FilesystemInfo &rhs) const {
+        return this->name == rhs.name && this->dir == rhs.dir && this->mount_type == rhs.mount_type && this->mount_options == rhs.mount_options;
+    }
 };
 
 // get capacity of /

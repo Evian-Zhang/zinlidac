@@ -6,6 +6,7 @@
 #include <vector>
 
 #include <boost/python.hpp>
+#include <boost/python/suite/indexing/vector_indexing_suite.hpp>
 
 void exception_translator(libzinlidac::Error const &error) {
     PyErr_SetString(PyExc_UserWarning, error.description().c_str());
@@ -45,4 +46,18 @@ BOOST_PYTHON_MODULE(libzinlidacpy) {
     def("get_system_name", libzinlidac::get_system_name);
     def("get_system_release_level", libzinlidac::get_system_release_level);
     def("get_system_release_version_level", libzinlidac::get_system_release_version_level);
+
+    // filesystem
+    class_<libzinlidac::FilesystemInfo>("FilesystemInfo")
+        .def_readonly("name", &libzinlidac::FilesystemInfo::name)
+        .def_readonly("dir", &libzinlidac::FilesystemInfo::dir)
+        .def_readonly("mount_type", &libzinlidac::FilesystemInfo::mount_type)
+        .def_readonly("mount_options", &libzinlidac::FilesystemInfo::mount_options);
+    class_<std::vector<libzinlidac::FilesystemInfo> >("FilesystemInfoVec")
+        .def(vector_indexing_suite<std::vector<libzinlidac::FilesystemInfo> >());
+    def("get_filesystem_capacity", libzinlidac::get_filesystem_capacity);
+    def("get_filesystem_free_size", libzinlidac::get_filesystem_free_size);
+    def("get_filesystem_type", libzinlidac::get_filesystem_type);
+    def("get_current_mounted_filesystems", libzinlidac::get_current_mounted_filesystems);
+    def("get_configured_mounted_filesystems", libzinlidac::get_configured_mounted_filesystems);
 }

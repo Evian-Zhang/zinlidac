@@ -1,7 +1,7 @@
 #include <string>
 #include <sys/utsname.h>
 
-namespace zinlidac {
+namespace libzinlidac {
 std::string get_system_name() noexcept {
     struct utsname unix_name;
     // No errors are defined
