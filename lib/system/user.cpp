@@ -102,8 +102,9 @@ std::vector<GroupInfo> get_groups() {
                 // see https://stackoverflow.com/a/5607650/10005095
                 std::stringstream ss(user_list);
                 // in case UserListTokens is not deleted
-                auto loc = std::make_shared<UserListTokens>();
-                ss.imbue(std::locale(std::locale(), loc.get()));
+                // Cannot use the commentted way, leading to "free(): invalida pointer"
+                // auto loc = std::make_shared<UserListTokens>();
+                ss.imbue(std::locale(std::locale(), new UserListTokens()));
                 std::istream_iterator<std::string> begin(ss);
                 std::istream_iterator<std::string> end;
                 std::vector<std::string> users(begin, end);

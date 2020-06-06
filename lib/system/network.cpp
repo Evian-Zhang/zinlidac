@@ -101,7 +101,6 @@ std::vector<LsofIResult> get_lsof__i() {
                 } catch (...) {
                     continue;
                 }
-                printf("pushed\n");
                 lsof_results.push_back((LsofIResult){
                     .command = sm[1],
                     .pid = pid,
@@ -141,7 +140,6 @@ std::vector<LsofUaResult> get_lsof__Ua() {
                 } catch (...) {
                     continue;
                 }
-                printf("pushed\n");
                 lsof_results.push_back((LsofUaResult){
                     .command = sm[1],
                     .pid = pid,

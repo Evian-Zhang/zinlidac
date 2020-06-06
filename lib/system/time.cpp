@@ -6,7 +6,7 @@
 #include <sys/time.h>
 
 namespace libzinlidac {
-TimeSince1970 get_current_time() noexcept {
+long int get_current_time() noexcept {
     struct timeval tp;
     // NO errors are defined
     //
@@ -23,10 +23,7 @@ TimeSince1970 get_current_time() noexcept {
     // is  on  local time, and that it has to be incremented by this amount to
     // get UTC system time.  No doubt it is a bad idea to use this feature.
     gettimeofday(&tp, NULL);
-    return (TimeSince1970){
-        .seconds = tp.tv_sec,
-        .milliseconds = tp.tv_usec
-    };
+    return tp.tv_sec;
 }
 
 // throws a `FileReadError` if cannot open /etc/timezone

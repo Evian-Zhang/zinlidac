@@ -22,6 +22,36 @@ if __name__ == '__main__':
                     mount_options
                 }
             }
+            user {
+                associated_user {
+                    name
+                    uid
+                }
+                users {
+                    name
+                    login_shell
+                }
+                groups {
+                    name
+                }
+            }
+            process {
+                processes {
+                    cmdline_arguments,
+                    basename
+                }
+            }
+            network {
+                network_interfaces {
+                    name
+                    address
+                }
+                lsof_i {
+                    command
+                    user
+                    fd
+                }
+            }
         }
     }"""
     print(zinlidac_schema.execute(query))

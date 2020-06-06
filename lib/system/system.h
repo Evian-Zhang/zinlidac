@@ -45,7 +45,7 @@ struct TimeSince1970 {
 };
 
 // get current time in seconds and milliseconds
-TimeSince1970 get_current_time() noexcept;
+long int get_current_time() noexcept;
 // get current timezone
 // throws a `FileReadError` if cannot open /etc/timezone
 std::string get_timezone();
@@ -62,17 +62,27 @@ struct LoginUserInfo {
     unsigned int uid;
 };
 struct UserInfo {
+public:
     std::string name;
     unsigned int uid;
     unsigned int groupid;
     std::string full_name;
     std::string home_directory;
     std::string login_shell;
+
+    bool operator==(const UserInfo &rhs) const {
+        return this->name == rhs.name && this->uid == rhs.uid && this->groupid == rhs.groupid && this->full_name == rhs.full_name && this->home_directory == rhs.home_directory && this->login_shell == rhs.login_shell;
+    }
 };
 struct GroupInfo {
+public:
     std::string name;
     unsigned int gid;
     std::vector<std::string> users;
+
+    bool operator==(const GroupInfo &rhs) const {
+        return this->name == rhs.name && this->gid == rhs.gid && this->users == rhs.users;
+    }
 };
 // get user logged in on the controlling terminal of the process
 // throws a `SpecialError` if name of the user logged in cannot be determined
@@ -88,6 +98,7 @@ std::vector<GroupInfo> get_groups();
 
 // --------------------------- Process ---------------------------
 struct ProcessInfo {
+public:
     int ppid; // pid of parent process
     unsigned long long utime; // user-mode CPU time accumulated by process
     unsigned long long stime; // kernel-mode CPU time accumulated by process
@@ -102,6 +113,10 @@ struct ProcessInfo {
     std::string user; // real user name
     std::string basename; // basename of executable file in call to exec(2)
     int threads_number; // number of threads, or 0 if no clue
+
+    bool operator==(const ProcessInfo &rhs) const {
+        return this->ppid == rhs.ppid && this->utime == rhs.utime && this->stime == rhs.stime && this->start_time == rhs.start_time && this->priority == rhs.priority && this->nice == rhs.nice && this->vm_size == rhs.vm_size && this->vm_resident == rhs.vm_resident && this->environment_variables == rhs.environment_variables && this->cmdline_arguments == rhs.cmdline_arguments && this->user == rhs.user && this->basename == rhs.basename && this->threads_number == rhs.threads_number;
+    }
 };
 // get list of environment variables
 std::vector<std::string> get_environment_variables() noexcept;
@@ -114,11 +129,17 @@ std::string get_path_environment();
 
 // --------------------------- Network ---------------------------
 struct NetworkInterfaceInfo {
+public:
     std::string name;
     std::string network_family;
     std::string address;
+
+    bool operator==(const NetworkInterfaceInfo &rhs) const {
+        return this->name == rhs.name && this->network_family == rhs.network_family && this->address == rhs.address;
+    }
 };
 struct LsofIResult {
+public:
     std::string command;
     unsigned int pid;
     std::string user;
@@ -127,8 +148,13 @@ struct LsofIResult {
     std::string device;
     std::string node;
     std::string name;
+
+    bool operator==(const LsofIResult &rhs) const {
+        return this->command == rhs.command && this->pid == rhs.pid && this->user == rhs.user && this->fd == rhs.fd && this->type == rhs.type && this->device == rhs.device && this->node == rhs.node && this->name == rhs.name;
+    }
 };
 struct LsofUaResult {
+public:
     std::string command;
     unsigned int pid;
     std::string user;
@@ -136,6 +162,10 @@ struct LsofUaResult {
     std::string type;
     std::string device;
     std::string name;
+
+    bool operator==(const LsofUaResult &rhs) const {
+        return this->command == rhs.command && this->pid == rhs.pid && this->user == rhs.user && this->fd == rhs.fd && this->type == rhs.type && this->device == rhs.device && this->name == rhs.name;
+    }
 };
 // get list of network interfaces
 // throws a `SpecialError` if getifaddrs failed
