@@ -1,0 +1,85 @@
+{
+    hardware { 
+        cpu {
+            hardware_type
+        }
+    }
+    system {
+        operating_system {
+            system_name
+            system_release_level
+            system_release_version_level
+        }
+        filesystem {
+            filesystem_type
+            configured_mounted_filesystems {
+                name
+                dir
+                mount_type
+                mount_options
+            }
+        }
+        user {
+            associated_user {
+                name
+                uid
+            }
+            users {
+                name
+                uid
+                groupid
+                full_name
+                home_directory
+                login_shell
+            }
+            groups {
+                name
+                gid
+                users
+            }
+        }
+        process {
+            processes {
+                basename
+                cmdline_arguments
+                user
+            }
+        }
+        network {
+            network_interfaces {
+                name
+                address
+            }
+            lsof_i {
+                command
+                user
+                fd
+            }
+        }
+    }
+    command(commands: [
+        "uname -a",
+        "fdisk -l",
+        "df -h",
+        "dpkg --get-selections",
+        "crontab -l",
+        "service --status-all",
+        "lsmod",
+        "ifconfig -a",
+        "netstat -rn",
+        "netstat -anp",
+        "arp -a"
+    ]) {
+        command
+        result
+    }
+    file(srcs: [
+        "/proc/cpuinfo",
+        "/proc/meminfo",
+        "/etc/passwd",
+        "/etc/group"
+    ], base_dir: "./files") {
+        src
+        dst
+    }
+}

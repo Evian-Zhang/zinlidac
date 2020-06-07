@@ -22,16 +22,9 @@ def format_error(error):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Python wrapper for libzinlidac")
     parser.add_argument("graphql_query", help="path of input GraphQL query file")
-    parser.add_argument("-f", "--format", nargs='?', default='json', help="format of output results")
-    parser.add_argument("-o", "--output", nargs='?', default='results.json', help="path of output results file")
+    parser.add_argument("-o", "--output", nargs='?', default="results.json", help="path of output results file")
 
     args = parser.parse_args()
-    if args.format == "json":
-        format = Format.JSON
-    elif args.format == "protobuf":
-        format = Format.ProtoBuf
-    else:
-        raise Exception("Unknown format type")
 
     with open(args.graphql_query, 'r') as query_file:
         query = query_file.read()
@@ -40,9 +33,6 @@ if __name__ == '__main__':
         results = {'data': query_results.data}
         if query_results.errors:
             results['errors'] = [format_error(e) for e in query_results.errors]
-        if format == Format.JSON:
-            results_str = json.dumps(results, ensure_ascii=False, indent=4)
-        elif format == Format.ProtoBuf:
-            results_str = ""
+        results_str = json.dumps(results, ensure_ascii=False, indent=4)
         with open(args.output, 'w+', encoding="utf-8") as results_file:
             results_file.write(results_str)
