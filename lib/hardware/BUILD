@@ -15,3 +15,4 @@ cc_library(
         "//lib/error:error",
     ],
 )
+exports_files(["hardware.h"])

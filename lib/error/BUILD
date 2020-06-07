@@ -3,3 +3,4 @@ cc_library(
     hdrs = ["error.h"],
     visibility = ["//visibility:public"],
 )
+exports_files(["error.h"])

@@ -7,3 +7,4 @@ cc_binary(
     ],
     linkshared = True,
 )
+exports_files(["error.h", "hardware.h", "system.h"])

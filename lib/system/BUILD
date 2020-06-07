@@ -23,3 +23,4 @@ cc_library(
         "-lprocps",
     ],
 )
+exports_files(["system.h"])
