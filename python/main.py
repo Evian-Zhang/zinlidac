@@ -1,4 +1,3 @@
-from enum import Enum
 import json
 
 from graphene import Schema
@@ -7,10 +6,6 @@ from graphql.error import format_error as format_graphql_error
 import argparse
 
 import schema.schema as schema_module
-
-class Format(Enum):
-    JSON = 1
-    ProtoBuf = 2
 
 # see https://github.com/graphql-python/graphene-django/blob/master/graphene_django
 def format_error(error):
