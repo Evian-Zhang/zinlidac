@@ -4,7 +4,7 @@ zinlidac是我用C++和Python写的一个在Linux上的Live Data Collection工�
 
 ## 框架结构
 
-![framework](assets/framework.pdf)
+![framework](assets/framework.png)
 
 本框架的结构分为三个部分：
 
